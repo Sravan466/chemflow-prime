@@ -71,7 +71,7 @@ export async function createSubmission(submissionData: Omit<Submission, '_id' | 
 
 export async function getSubmissionsByUserId(userId: string, filters: any = {}): Promise<Submission[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/submissions/${userId}`)
+    const response = await fetch(`${API_BASE_URL}/api/submissions/${userId}`)
     
     if (!response.ok) {
       throw new Error('Failed to fetch submissions')
@@ -144,7 +144,7 @@ export async function getAllSubmissionsWithDetails(): Promise<(Submission & { us
 
 export async function updateSubmissionStatus(submissionId: string, newStatus: string): Promise<boolean> {
   try {
-    const response = await fetch(`${API_BASE_URL}/submissions/${submissionId}/status`, {
+    const response = await fetch(`${API_BASE_URL}/api/submissions/${submissionId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export async function updateSubmissionStatus(submissionId: string, newStatus: st
 
 export async function deleteSubmission(submissionId: string): Promise<boolean> {
   try {
-    const response = await fetch(`${API_BASE_URL}/submissions/${submissionId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/submissions/${submissionId}`, {
       method: 'DELETE',
     })
 
@@ -185,7 +185,7 @@ export async function deleteSubmission(submissionId: string): Promise<boolean> {
 // --- Stats Operations ---
 export async function getSubmissionStats(userId?: string): Promise<{ totalSubmissions: number, thisMonth: number, pending: number, approved: number, totalUsers: number, totalCompanies: number }> {
   try {
-    const response = await fetch(`${API_BASE_URL}/stats`)
+    const response = await fetch(`${API_BASE_URL}/api/stats`)
     
     if (!response.ok) {
       throw new Error('Failed to fetch stats')
@@ -210,7 +210,7 @@ export async function getSubmissionStats(userId?: string): Promise<{ totalSubmis
 
 export async function getUserAndCompanyCounts(): Promise<{ totalUsers: number, totalCompanies: number }> {
   try {
-    const response = await fetch(`${API_BASE_URL}/stats`)
+    const response = await fetch(`${API_BASE_URL}/api/stats`)
     
     if (!response.ok) {
       throw new Error('Failed to fetch counts')
