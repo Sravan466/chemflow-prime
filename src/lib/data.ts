@@ -1,11 +1,11 @@
 import { Company, Submission, User } from './mongodb'
 
-const API_BASE_URL = 'http://localhost:3001/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 // --- Company Profile Operations ---
 export async function createCompany(companyData: Omit<Company, '_id' | 'createdAt' | 'updatedAt'>): Promise<Company | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/company`, {
+    const response = await fetch(`${API_BASE_URL}/api/company`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export async function createCompany(companyData: Omit<Company, '_id' | 'createdA
 
 export async function getCompanyByUserId(userId: string): Promise<Company | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/company/${userId}`)
+    const response = await fetch(`${API_BASE_URL}/api/company/${userId}`)
     
     if (!response.ok) {
       if (response.status === 404) {
@@ -50,7 +50,7 @@ export async function updateCompany(companyId: string, updates: Partial<Company>
 // --- Chemical Submission Operations ---
 export async function createSubmission(submissionData: Omit<Submission, '_id' | 'createdAt' | 'updatedAt'>): Promise<Submission | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/submissions`, {
+    const response = await fetch(`${API_BASE_URL}/api/submissions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ export async function getSubmissionsByUserId(userId: string, filters: any = {}):
 
 export async function getAllSubmissions(): Promise<Submission[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/submissions`)
+    const response = await fetch(`${API_BASE_URL}/api/submissions`)
     
     if (!response.ok) {
       throw new Error('Failed to fetch submissions')
@@ -129,7 +129,7 @@ export async function getAllSubmissions(): Promise<Submission[]> {
 
 export async function getAllSubmissionsWithDetails(): Promise<(Submission & { user: User, company: Company })[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/submissions`)
+    const response = await fetch(`${API_BASE_URL}/api/submissions`)
     
     if (!response.ok) {
       throw new Error('Failed to fetch submissions')
