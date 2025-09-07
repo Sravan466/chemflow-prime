@@ -5,15 +5,15 @@ import { MongoClient, ObjectId } from 'mongodb'
 import bcrypt from 'bcryptjs'
 
 const app = express()
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 // Middleware
 app.use(cors())
 app.use(express.json())
 
 // MongoDB connection
-const MONGODB_URI = 'mongodb+srv://chemflow:chemflow123@cluster0.acphrt8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-const MONGODB_DB = 'chemflow'
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://chemflow:chemflow123@cluster0.acphrt8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const MONGODB_DB = process.env.MONGODB_DB || 'chemflow'
 
 let client, db
 
