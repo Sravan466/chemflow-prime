@@ -1,36 +1,45 @@
-# Chemical Reporting System
+# ChemFlow Prime
 
-A government-style chemical reporting website built with React, TypeScript, and Supabase. This system allows companies to submit chemical inventory data with role-based access control and audit logging.
+A comprehensive chemical management and reporting system designed for government compliance and corporate chemical inventory tracking. Built with modern web technologies, ChemFlow Prime provides a secure, scalable platform for chemical data management with role-based access control and comprehensive audit logging.
 
-## Features
+## 🚀 Live Demo
 
-- **Authentication**: Email/password login with Supabase Auth
-- **Role-Based Access**: Operator, Manager, and SuperAdmin roles
-- **Company Profiles**: One-time company registration with logo upload
-- **Chemical Data Entry**: Comprehensive form for chemical submissions
-- **Dashboard**: Summary statistics, filters, and data export
-- **Admin Panel**: System oversight and submission approval
-- **Audit Logging**: Complete audit trail for all actions
-- **File Storage**: MSDS file uploads with secure storage
+Visit the live application: [ChemFlow Prime Demo](https://your-demo-url.com)
 
-## Tech Stack
+## 📋 Overview
+
+ChemFlow Prime is a full-stack web application that enables companies to:
+- Submit and manage chemical inventory data
+- Track chemical usage and compliance
+- Generate regulatory reports
+- Maintain audit trails for government inspections
+- Manage user roles and permissions
+- Store and organize MSDS documents
+
+## ✨ Features
+
+- **🔐 Authentication**: Secure email/password login system
+- **👥 Role-Based Access**: Operator, Manager, and SuperAdmin roles
+- **🏢 Company Profiles**: One-time company registration with logo upload
+- **🧪 Chemical Data Entry**: Comprehensive form for chemical submissions
+- **📊 Dashboard**: Summary statistics, filters, and data export
+- **⚙️ Admin Panel**: System oversight and submission approval
+- **📝 Audit Logging**: Complete audit trail for all actions
+- **📁 File Storage**: MSDS file uploads with secure storage
+- **🔍 Search & Filter**: Advanced search and filtering capabilities
+- **📈 Reporting**: Generate compliance and inventory reports
+
+## 🛠️ Tech Stack
 
 - **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS with government-style design
-- **Backend**: Supabase (Auth + PostgreSQL + Storage)
+- **Styling**: Tailwind CSS with modern, responsive design
+- **Backend**: Node.js + Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT-based authentication
 - **Routing**: React Router DOM
 - **Forms**: React Hook Form with Zod validation
 - **Icons**: Lucide React
-
-## Demo Accounts
-
-The system comes with pre-configured demo accounts:
-
-| Role | Email | Password |
-|------|-------|----------|
-| Operator | operator@example.com | Operator123! |
-| Manager | manager@example.com | Manager123! |
-| SuperAdmin | admin@example.com | Admin123! |
+- **File Upload**: Multer for file handling
 
 ## Quick Start
 
