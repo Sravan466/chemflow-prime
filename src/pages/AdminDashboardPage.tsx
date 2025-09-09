@@ -15,10 +15,12 @@ import {
   Settings,
   Shield
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
 
 export default function AdminDashboardPage() {
   const { user, userProfile, signOut } = useAuth()
+  const navigate = useNavigate()
   const [submissions, setSubmissions] = useState<(Submission & { 
     user: User, 
     company: Company 
@@ -37,7 +39,9 @@ export default function AdminDashboardPage() {
     dateTo: '',
     chemicalName: '',
     status: '',
-    userName: ''
+    userName: '',
+    department: '',
+    company: ''
   })
 
   useEffect(() => {
@@ -152,7 +156,9 @@ export default function AdminDashboardPage() {
       dateTo: '',
       chemicalName: '',
       status: '',
-      userName: ''
+      userName: '',
+      department: '',
+      company: ''
     })
   }
 
@@ -176,7 +182,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center">
               <Shield className="h-8 w-8 text-blue-600 mr-3" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Chemical Reporting System</h1>
+                <h1 className="text-xl font-bold text-gray-900">Drug Reporting System</h1>
                 <p className="text-sm text-gray-500">Administrator Panel</p>
               </div>
             </div>
@@ -313,7 +319,7 @@ export default function AdminDashboardPage() {
             <Filter className="h-5 w-5 text-gray-500 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
           </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-4">
           <div>
             <label className="form-label">From Date</label>
             <input
@@ -350,6 +356,29 @@ export default function AdminDashboardPage() {
               onChange={(e) => setFilters({...filters, userName: e.target.value})}
               className="form-input"
               placeholder="Search users..."
+            />
+          </div>
+          <div>
+            <label className="form-label">Department</label>
+            <select
+              value={filters.department}
+              onChange={(e) => setFilters({...filters, department: e.target.value})}
+              className="form-input"
+            >
+              <option value="">All</option>
+              <option value="administrative">Administrative</option>
+              <option value="sales">Sales</option>
+              <option value="purchase">Purchase</option>
+            </select>
+          </div>
+          <div>
+            <label className="form-label">Company</label>
+            <input
+              type="text"
+              value={filters.company}
+              onChange={(e) => setFilters({...filters, company: e.target.value})}
+              className="form-input"
+              placeholder="Search company..."
             />
           </div>
           <div>
@@ -402,7 +431,7 @@ export default function AdminDashboardPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -414,6 +443,9 @@ export default function AdminDashboardPage() {
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Company
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Department
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Quantity
@@ -430,8 +462,26 @@ export default function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {submissions.map((submission) => (
-                    <tr key={submission._id} className="hover:bg-gray-50 transition-colors">
+                  {submissions
+                    // Department filter
+                    .filter(sub => !filters.department || sub.department_role === filters.department)
+                    // Company filter
+                    .filter(sub => !filters.company || sub.company?.companyName?.toLowerCase().includes(filters.company.toLowerCase()))
+                    // Date range filters
+                    .filter(sub => !filters.dateFrom || new Date(sub.createdAt) >= new Date(filters.dateFrom))
+                    .filter(sub => !filters.dateTo || new Date(sub.createdAt) <= new Date(filters.dateTo))
+                    // Chemical name filter
+                    .filter(sub => !filters.chemicalName || sub.chemicalName.toLowerCase().includes(filters.chemicalName.toLowerCase()))
+                    // Status filter
+                    .filter(sub => !filters.status || sub.status === filters.status)
+                    // User name filter
+                    .filter(sub => !filters.userName || (sub.user?.name || '').toLowerCase().includes(filters.userName.toLowerCase()))
+                    .map((submission) => (
+                    <tr
+                      key={submission._id}
+                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => navigate(`/admin/submissions/${submission._id}`)}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-semibold text-gray-900">
                           {submission.chemicalName}
@@ -466,6 +516,9 @@ export default function AdminDashboardPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {submission.department_role ? submission.department_role.charAt(0).toUpperCase() + submission.department_role.slice(1) : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {submission.quantity && submission.unit 
                           ? `${submission.quantity} ${submission.unit}`
                           : '-'
@@ -494,7 +547,7 @@ export default function AdminDashboardPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => handleDeleteSubmission(submission._id!)}
+                            onClick={(e) => { e.stopPropagation(); handleDeleteSubmission(submission._id!) }}
                             className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
                             title="Delete submission"
                           >

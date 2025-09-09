@@ -7,6 +7,7 @@ import DashboardPage from '../pages/DashboardPage'
 import DataEntryPage from '../pages/DataEntryPage'
 import ProfilePage from '../pages/ProfilePage'
 import AdminDashboardPage from '../pages/AdminDashboardPage'
+import SubmissionDetailsPage from '../pages/SubmissionDetailsPage.tsx'
 import NotFoundPage from '../pages/NotFoundPage'
 import { useEffect, useState } from 'react'
 
@@ -63,6 +64,7 @@ export function AppRouter() {
     return (
       <Routes>
         <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route path="/admin/submissions/:id" element={<SubmissionDetailsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>

@@ -97,6 +97,21 @@ export interface Submission {
   usePurpose?: string
   storageConditions?: string
   inventoryDate?: Date
+  // Department related fields
+  department_role?: 'administrative' | 'sales' | 'purchase'
+  operation_details?: string
+  // Sales
+  sales_type?: 'domestic' | 'export' | string
+  sales_product?: string
+  sales_quantity?: number
+  sales_unit?: string
+  sales_customer?: string
+  // Purchases
+  purchase_type?: 'raw_material' | 'finished_chemical' | string
+  purchase_product?: string
+  purchase_quantity?: number
+  purchase_unit?: string
+  purchase_supplier?: string
   status: 'submitted' | 'reviewed' | 'approved' | 'rejected'
   createdAt: Date
   updatedAt: Date

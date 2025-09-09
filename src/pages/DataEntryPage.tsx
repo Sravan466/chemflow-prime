@@ -31,7 +31,22 @@ export default function DataEntryPage() {
     hazardClass: '',
     usePurpose: '',
     storageConditions: '',
-    inventoryDate: ''
+    inventoryDate: '',
+    // Department fields
+    department_role: '', // administrative | sales | purchase
+    operation_details: '',
+    // Sales
+    sales_type: '',
+    sales_product: '',
+    sales_quantity: '',
+    sales_unit: '',
+    sales_customer: '',
+    // Purchases
+    purchase_type: '',
+    purchase_product: '',
+    purchase_quantity: '',
+    purchase_unit: '',
+    purchase_supplier: ''
   })
 
   useEffect(() => {
@@ -73,6 +88,32 @@ export default function DataEntryPage() {
     setSuccess(null)
 
     try {
+      // Conditional validation based on department
+      if (!formData.department_role) {
+        setError('Please select a Department')
+        setLoading(false)
+        return
+      }
+      if (formData.department_role === 'administrative') {
+        if (!formData.operation_details) {
+          setError('Please describe the administrative operation')
+          setLoading(false)
+          return
+        }
+      } else if (formData.department_role === 'sales') {
+        if (!formData.sales_type || !formData.sales_product || !formData.sales_quantity || !formData.sales_unit || !formData.sales_customer) {
+          setError('Please fill all Sales details')
+          setLoading(false)
+          return
+        }
+      } else if (formData.department_role === 'purchase') {
+        if (!formData.purchase_type || !formData.purchase_product || !formData.purchase_quantity || !formData.purchase_unit || !formData.purchase_supplier) {
+          setError('Please fill all Purchase details')
+          setLoading(false)
+          return
+        }
+      }
+
       const submissionData = {
         userId: user._id!,
         companyId: company._id!,
@@ -85,6 +126,19 @@ export default function DataEntryPage() {
         usePurpose: formData.usePurpose || undefined,
         storageConditions: formData.storageConditions || undefined,
         inventoryDate: formData.inventoryDate ? new Date(formData.inventoryDate) : undefined,
+        // Department payload
+        department_role: formData.department_role ? (formData.department_role as 'administrative' | 'sales' | 'purchase') : undefined,
+        operation_details: formData.operation_details || undefined,
+        sales_type: formData.sales_type || undefined,
+        sales_product: formData.sales_product || undefined,
+        sales_quantity: formData.sales_quantity ? parseFloat(formData.sales_quantity) : undefined,
+        sales_unit: formData.sales_unit || undefined,
+        sales_customer: formData.sales_customer || undefined,
+        purchase_type: formData.purchase_type || undefined,
+        purchase_product: formData.purchase_product || undefined,
+        purchase_quantity: formData.purchase_quantity ? parseFloat(formData.purchase_quantity) : undefined,
+        purchase_unit: formData.purchase_unit || undefined,
+        purchase_supplier: formData.purchase_supplier || undefined,
         status: 'submitted' as const
       }
 
@@ -104,7 +158,19 @@ export default function DataEntryPage() {
           hazardClass: '',
           usePurpose: '',
           storageConditions: '',
-          inventoryDate: ''
+          inventoryDate: '',
+          department_role: '',
+          operation_details: '',
+          sales_type: '',
+          sales_product: '',
+          sales_quantity: '',
+          sales_unit: '',
+          sales_customer: '',
+          purchase_type: '',
+          purchase_product: '',
+          purchase_quantity: '',
+          purchase_unit: '',
+          purchase_supplier: ''
         })
         // Redirect to dashboard after 2 seconds
         setTimeout(() => {
@@ -339,6 +405,228 @@ export default function DataEntryPage() {
                 </div>
               </div>
             </div>
+
+            {/* Department Related Operations */}
+            <div className="border-t pt-6 mt-6">
+              
+
+              {/* Department Selector */}
+              <div className="sm:col-span-2 mb-4">
+                <label htmlFor="department_role" className="block text-sm font-medium text-gray-700">Department *</label>
+                <div className="mt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <label className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer ${formData.department_role === 'administrative' ? 'bg-blue-50 border-blue-300 text-blue-700' : 'border-gray-300 text-gray-700'}`}>
+                      <input
+                        type="radio"
+                        name="department_role"
+                        value="administrative"
+                        checked={formData.department_role === 'administrative'}
+                        onChange={handleInputChange}
+                        className="hidden"
+                      />
+                      Administrative
+                    </label>
+                    <label className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer ${formData.department_role === 'sales' ? 'bg-blue-50 border-blue-300 text-blue-700' : 'border-gray-300 text-gray-700'}`}>
+                      <input
+                        type="radio"
+                        name="department_role"
+                        value="sales"
+                        checked={formData.department_role === 'sales'}
+                        onChange={handleInputChange}
+                        className="hidden"
+                      />
+                      Sales
+                    </label>
+                    <label className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer ${formData.department_role === 'purchase' ? 'bg-blue-50 border-blue-300 text-blue-700' : 'border-gray-300 text-gray-700'}`}>
+                      <input
+                        type="radio"
+                        name="department_role"
+                        value="purchase"
+                        checked={formData.department_role === 'purchase'}
+                        onChange={handleInputChange}
+                        className="hidden"
+                      />
+                      Purchases
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Administrative Operation */}
+              {formData.department_role === 'administrative' && (
+                <div className="sm:col-span-2">
+                  <label htmlFor="operation_details" className="block text-sm font-medium text-gray-700">
+                    Administrative Operation Details *
+                  </label>
+                  <textarea
+                    name="operation_details"
+                    id="operation_details"
+                    rows={3}
+                    value={formData.operation_details}
+                    onChange={handleInputChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="e.g., regulatory reporting, compliance check, data entry"
+                  />
+                </div>
+              )}
+
+              {/* Sales Details */}
+              {formData.department_role === 'sales' && (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="sales_type" className="block text-sm font-medium text-gray-700">Type of Sales *</label>
+                    <select
+                      name="sales_type"
+                      id="sales_type"
+                      value={formData.sales_type}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    >
+                      <option value="">Select type</option>
+                      <option value="domestic">Domestic</option>
+                      <option value="export">Export</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="sales_product" className="block text-sm font-medium text-gray-700">Chemical/Product Name *</label>
+                    <input
+                      type="text"
+                      name="sales_product"
+                      id="sales_product"
+                      value={formData.sales_product}
+                      onChange={handleInputChange}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter product name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sales_quantity" className="block text-sm font-medium text-gray-700">Quantity *</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      name="sales_quantity"
+                      id="sales_quantity"
+                      value={formData.sales_quantity}
+                      onChange={handleInputChange}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter quantity"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sales_unit" className="block text-sm font-medium text-gray-700">Unit *</label>
+                    <select
+                      name="sales_unit"
+                      id="sales_unit"
+                      value={formData.sales_unit}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    >
+                      <option value="">Select unit</option>
+                      <option value="kg">Kilograms (kg)</option>
+                      <option value="g">Grams (g)</option>
+                      <option value="L">Liters (L)</option>
+                      <option value="mL">Milliliters (mL)</option>
+                      <option value="ton">Tons</option>
+                      <option value="lb">Pounds (lb)</option>
+                      <option value="gal">Gallons</option>
+                      <option value="pieces">Pieces</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="sales_customer" className="block text-sm font-medium text-gray-700">Buyer/Customer Name *</label>
+                    <input
+                      type="text"
+                      name="sales_customer"
+                      id="sales_customer"
+                      value={formData.sales_customer}
+                      onChange={handleInputChange}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter customer name"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Purchase Details */}
+              {formData.department_role === 'purchase' && (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="purchase_type" className="block text-sm font-medium text-gray-700">Type of Purchase *</label>
+                    <select
+                      name="purchase_type"
+                      id="purchase_type"
+                      value={formData.purchase_type}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    >
+                      <option value="">Select type</option>
+                      <option value="raw_material">Raw Material</option>
+                      <option value="finished_chemical">Finished Chemical</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="purchase_supplier" className="block text-sm font-medium text-gray-700">Supplier Name *</label>
+                    <input
+                      type="text"
+                      name="purchase_supplier"
+                      id="purchase_supplier"
+                      value={formData.purchase_supplier}
+                      onChange={handleInputChange}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter supplier name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="purchase_quantity" className="block text sm font-medium text-gray-700">Quantity *</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      name="purchase_quantity"
+                      id="purchase_quantity"
+                      value={formData.purchase_quantity}
+                      onChange={handleInputChange}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter quantity"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="purchase_unit" className="block text-sm font-medium text-gray-700">Unit *</label>
+                    <select
+                      name="purchase_unit"
+                      id="purchase_unit"
+                      value={formData.purchase_unit}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    >
+                      <option value="">Select unit</option>
+                      <option value="kg">Kilograms (kg)</option>
+                      <option value="g">Grams (g)</option>
+                      <option value="L">Liters (L)</option>
+                      <option value="mL">Milliliters (mL)</option>
+                      <option value="ton">Tons</option>
+                      <option value="lb">Pounds (lb)</option>
+                      <option value="gal">Gallons</option>
+                      <option value="pieces">Pieces</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="purchase_product" className="block text-sm font-medium text-gray-700">Chemical/Product Name *</label>
+                    <input
+                      type="text"
+                      name="purchase_product"
+                      id="purchase_product"
+                      value={formData.purchase_product}
+                      onChange={handleInputChange}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter product name"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">

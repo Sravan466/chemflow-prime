@@ -89,7 +89,7 @@ export default function LoginPage() {
             <Lock className="h-6 w-6 text-white" />
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Chemical Reporting System
+            Drug Reporting System
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             {isLogin ? 'Sign in to your account' : 'Create a new account'}

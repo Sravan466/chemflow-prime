@@ -34,7 +34,8 @@ export default function DashboardPage() {
     dateFrom: '',
     dateTo: '',
     chemicalName: '',
-    status: ''
+    status: '',
+    department: ''
   })
 
   useEffect(() => {
@@ -85,6 +86,11 @@ export default function DashboardPage() {
       if (filters.status) {
         filteredSubmissions = filteredSubmissions.filter(sub => 
           sub.status === filters.status
+        )
+      }
+      if (filters.department) {
+        filteredSubmissions = filteredSubmissions.filter((sub: any) => 
+          sub.department_role === filters.department
         )
       }
 
@@ -156,7 +162,8 @@ export default function DashboardPage() {
       dateFrom: '',
       dateTo: '',
       chemicalName: '',
-      status: ''
+      status: '',
+      department: ''
     })
   }
 
@@ -180,7 +187,7 @@ export default function DashboardPage() {
             <div className="flex items-center">
               <Building2 className="h-8 w-8 text-blue-600 mr-3" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Chemical Reporting System</h1>
+                <h1 className="text-xl font-bold text-gray-900">Drug Reporting System</h1>
                 <p className="text-sm text-gray-500">User Dashboard</p>
               </div>
             </div>
@@ -350,6 +357,19 @@ export default function DashboardPage() {
               <option value="rejected">Rejected</option>
             </select>
           </div>
+          <div>
+            <label className="form-label">Department</label>
+            <select
+              value={filters.department}
+              onChange={(e) => setFilters({...filters, department: e.target.value})}
+              className="form-input"
+            >
+              <option value="">All</option>
+              <option value="administrative">Administrative</option>
+              <option value="sales">Sales</option>
+              <option value="purchase">Purchase</option>
+            </select>
+          </div>
           <div className="flex items-end">
             <button
               onClick={resetFilters}
@@ -393,7 +413,7 @@ export default function DashboardPage() {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -402,6 +422,9 @@ export default function DashboardPage() {
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       CAS Number
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Department
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Quantity
@@ -429,6 +452,9 @@ export default function DashboardPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {submission.casNumber || '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {(submission as any).department_role ? ((submission as any).department_role as string).charAt(0).toUpperCase() + ((submission as any).department_role as string).slice(1) : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {submission.quantity && submission.unit 
