@@ -526,6 +526,8 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <select
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
                           value={submission.status}
                           onChange={(e) => handleStatusUpdate(submission._id!, e.target.value as 'submitted' | 'reviewed' | 'approved' | 'rejected')}
                           className={`text-xs font-semibold rounded-full px-3 py-1 border-0 cursor-pointer ${
