@@ -1,6 +1,6 @@
 import { User } from './mongodb'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001'
 
 export const authService = {
   async signIn(email: string, password: string): Promise<{ user: User | null; error: string | null }> {
@@ -65,8 +65,22 @@ export const authService = {
   },
 
   async resetPassword(email: string): Promise<{ error: string | null }> {
-    // This is a placeholder. In a real application, you'd send a password reset email.
-    console.log(`Password reset requested for: ${email}`)
-    return { error: null }
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        return { error: data.error || 'Failed to request password reset' }
+      }
+
+      return { error: null }
+    } catch (error: any) {
+      console.error('Reset password error:', error)
+      return { error: error.message || 'An unexpected error occurred' }
+    }
   },
 }

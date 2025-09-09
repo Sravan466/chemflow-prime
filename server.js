@@ -87,6 +87,31 @@ app.post('/api/auth/signup', async (req, res) => {
   }
 })
 
+// Password reset (demo)
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { email } = req.body
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' })
+    }
+    const { db } = await connectToDatabase()
+    const user = await db.collection('users').findOne({ email })
+    if (!user) {
+      // Do not reveal whether user exists
+      return res.json({ success: true })
+    }
+    // In a real system, generate a token and send email. For now, acknowledge.
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(user._id) },
+      { $set: { updatedAt: new Date() } }
+    )
+    res.json({ success: true })
+  } catch (error) {
+    console.error('Reset password error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // Company endpoints
 app.get('/api/company/:userId', async (req, res) => {
   try {
